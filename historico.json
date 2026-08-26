@@ -1,0 +1,37 @@
+{
+    "9CC7D374504B": {
+        "ip": "192.168.4.5",
+        "tipo": "Host",
+        "fabricante": "Azurewave Technology Inc",
+        "status": "Ativo",
+        "ultima_vez_visto": "2026-08-26 20:34:43"
+    },
+    "14512062C5C2": {
+        "ip": "192.168.4.1",
+        "tipo": "Roteador",
+        "fabricante": "Huawei Device Ltd",
+        "status": "Ativo",
+        "ultima_vez_visto": "2026-08-26 20:34:43"
+    },
+    "BA96B842A836": {
+        "ip": "192.168.4.7",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Ativo",
+        "ultima_vez_visto": "2026-08-26 20:34:43"
+    },
+    "9EF807B25CD6": {
+        "ip": "192.168.4.14",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Ativo",
+        "ultima_vez_visto": "2026-08-26 20:34:43"
+    },
+    "E85A8BC1649E": {
+        "ip": "192.168.4.3",
+        "tipo": "Host",
+        "fabricante": "Xiaomi Communications Ltd",
+        "status": "Ativo",
+        "ultima_vez_visto": "2026-08-26 20:34:43"
+    }
+}

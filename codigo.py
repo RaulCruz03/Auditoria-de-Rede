@@ -1,16 +1,20 @@
 import subprocess
 import json
 import time
+from datetime import datetime
 
 interface =  input("Digite a interface de rede: -e é ethernet e -w é wireless: ")
 if(interface == "-w"):
      interface = "wlp0s20f3"
+if(interface == "-e"):
+     interface = "eth0"
+
 comando = "ip -4 addr show " + interface + " | grep inet"
 resultado = subprocess.run(comando, shell=True, capture_output=True, text=True)
 ip_local = ""
 counter_dots = 0
 palavras = resultado.stdout.split()
-print(resultado.stdout)
+data_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 for i in range(len(palavras[1])):
         ip_local = ip_local + palavras[1][i]
@@ -27,24 +31,44 @@ def ping_sweep(ip_local):
 with open("AuditorRede/oui_db.json","r", encoding="utf-8") as f:
      base_oui = json.load(f)
 
+try:
+    with open("AuditorRede/historico.json", "r", encoding="utf-8") as arquivo:
+        dados = json.load(arquivo)
+except FileNotFoundError:
+     dados = {}
+
 ping_sweep(ip_local)
 time.sleep(2)
 
-resultado_arp = subprocess.run("arp -a", shell=True, capture_output=True, text=True)
 
+resultado_arp = subprocess.run("arp -a", shell=True, capture_output=True, text=True)
+for mac_salvo in dados:
+     dados[mac_salvo]["status"] = "Inativo"
 
 for i in resultado_arp.stdout.splitlines():
+     
      if "<incompleto>" in i:
           continue
      linha = i.split()
      if(len(linha)>=4):
           ip  = linha[1].replace("(","").replace(")","")
           mac = linha[3].replace(":","").upper()
-
           tipo = "Roteador" if linha[0] == "_gateway" else "Host"
-
           prefixo_mac = mac[:6]
           fabricante = base_oui.get(prefixo_mac,"Fabricante Desconhecido || Mac Privado")
-          print(f"ip: {ip}  tipo: {tipo}   mac: {mac}   fabricante: {fabricante}  \n")
-        
 
+          dados[mac] = {
+               "ip": ip,
+               "tipo": tipo,
+               "fabricante": fabricante,
+               "status": "Ativo",
+               "ultima_vez_visto": data_hora
+          }
+          
+          prefixo_mac = mac[:6]
+          fabricante = base_oui.get(prefixo_mac,"Fabricante Desconhecido || Mac Privado")
+          print(f"ip: {ip} | tipo: {tipo} | mac: {mac} | fabricante: {fabricante} | status: Ativo | ultima_vez_visto: {data_hora} \n")
+
+
+with open("AuditorRede/historico.json", "w", encoding = "utf-8") as arquivo:
+     json.dump(dados, arquivo, indent=4, ensure_ascii=False)
