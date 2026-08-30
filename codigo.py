@@ -4,10 +4,12 @@ import time
 from datetime import datetime
 
 interface =  input("Digite a interface de rede: -e é ethernet e -w é wireless: ")
-if(interface == "-w"):
+if(interface == "w"):
      interface = "wlp0s20f3"
-if(interface == "-e"):
+if(interface == "e"):
      interface = "eth0"
+
+tempo = input("Digite o tempo máximo de espera do ping: ")
 
 comando = "ip -4 addr show " + interface + " | grep inet"
 resultado = subprocess.run(comando, shell=True, capture_output=True, text=True)
@@ -24,7 +26,7 @@ for i in range(len(palavras[1])):
                 break
         
 def ping_sweep(ip_local):
-    comando = f"for i in $(seq 1 254); do ping -c 1 -W 1 {ip_local}$i > /dev/null 2>&1 & done" # -c 1 é pacote e -W 1 é espera de 1 seg
+    comando = f"for i in $(seq 1 254); do ping -c 1 -W {tempo} {ip_local}$i > /dev/null 2>&1 & done" # -c 1 é pacote e -W 1 é espera de 1 seg
                                                                                     # > /dev/null 2>&1 é silenciar a saída de comando
     subprocess.run(comando, shell=True)
 
@@ -40,11 +42,12 @@ except FileNotFoundError:
 ping_sweep(ip_local)
 time.sleep(2)
 
+mac_conhecidos = set(dados.keys())
+
 
 resultado_arp = subprocess.run("arp -a", shell=True, capture_output=True, text=True)
 for mac_salvo in dados:
      dados[mac_salvo]["status"] = "Inativo"
-
 for i in resultado_arp.stdout.splitlines():
      
      if "<incompleto>" in i:
@@ -61,7 +64,7 @@ for i in resultado_arp.stdout.splitlines():
                "ip": ip,
                "tipo": tipo,
                "fabricante": fabricante,
-               "status": "Ativo",
+               "status": "Dispositivo Novo" if mac not in mac_conhecidos else "Dispositivo Ativo",
                "ultima_vez_visto": data_hora
           }
           
