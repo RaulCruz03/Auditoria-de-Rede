@@ -3,35 +3,35 @@
         "ip": "192.168.4.5",
         "tipo": "Host",
         "fabricante": "Azurewave Technology Inc",
-        "status": "Dispositivo Ativo",
-        "ultima_vez_visto": "2026-08-30 11:23:04"
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-14 21:10:58"
     },
     "14512062C5C2": {
         "ip": "192.168.4.1",
         "tipo": "Roteador",
         "fabricante": "Huawei Device Ltd",
-        "status": "Dispositivo Ativo",
-        "ultima_vez_visto": "2026-08-30 11:23:04"
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-14 21:10:58"
     },
     "BA96B842A836": {
         "ip": "192.168.4.7",
         "tipo": "Host",
         "fabricante": "Fabricante Desconhecido || Mac Privado",
-        "status": "Dispositivo Ativo",
-        "ultima_vez_visto": "2026-08-30 11:23:04"
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-14 21:10:58"
     },
     "9EF807B25CD6": {
         "ip": "192.168.4.14",
         "tipo": "Host",
         "fabricante": "Fabricante Desconhecido || Mac Privado",
-        "status": "Dispositivo Ativo",
-        "ultima_vez_visto": "2026-08-30 11:23:04"
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-14 21:10:58"
     },
     "E85A8BC1649E": {
         "ip": "192.168.4.3",
         "tipo": "Host",
         "fabricante": "Xiaomi Communications Ltd",
-        "status": "Dispositivo Ativo",
+        "status": "Inativo",
         "ultima_vez_visto": "2026-08-30 11:23:04"
     },
     "E272F66E4FBE": {
@@ -40,5 +40,229 @@
         "fabricante": "Fabricante Desconhecido || Mac Privado",
         "status": "Inativo",
         "ultima_vez_visto": "2026-08-26 21:13:55"
+    },
+    "54BAD912F5B8": {
+        "ip": "192.168.1.205",
+        "tipo": "Host",
+        "fabricante": "Intelbras",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "DE0F4E8DE811": {
+        "ip": "192.168.1.160",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "30E1F1736CEE": {
+        "ip": "192.168.1.239",
+        "tipo": "Host",
+        "fabricante": "Intelbras",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "AC482D127B28": {
+        "ip": "192.168.1.41",
+        "tipo": "Host",
+        "fabricante": "Ralinwi Nanjing Electronic Technology Ltd",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "FCEEE60EC0F5": {
+        "ip": "192.168.1.230",
+        "tipo": "Host",
+        "fabricante": "Formike Electronic Ltd",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "0418D65D06A6": {
+        "ip": "192.168.1.20",
+        "tipo": "Roteador",
+        "fabricante": "Ubiquiti Inc",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "E0D464E55056": {
+        "ip": "192.168.1.99",
+        "tipo": "Host",
+        "fabricante": "Intel Corporate",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "982A0A5BB3BC": {
+        "ip": "192.168.1.37",
+        "tipo": "Host",
+        "fabricante": "Intelbras",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "982A0A6EFDCE": {
+        "ip": "192.168.1.151",
+        "tipo": "Host",
+        "fabricante": "Intelbras",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "54BAD99C7596": {
+        "ip": "192.168.1.73",
+        "tipo": "Host",
+        "fabricante": "Intelbras",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:06"
+    },
+    "841EA361B556": {
+        "ip": "192.168.1.158",
+        "tipo": "Host",
+        "fabricante": "Sagemcom Broadband SAS",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:06"
+    },
+    "54BAD99C75B2": {
+        "ip": "192.168.1.101",
+        "tipo": "Host",
+        "fabricante": "Intelbras",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:06"
+    },
+    "72C596BD5040": {
+        "ip": "192.168.1.161",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "2A6CF93CD25D": {
+        "ip": "192.168.1.162",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-05 11:51:30"
+    },
+    "0CEA1415F295": {
+        "ip": "172.21.6.123",
+        "tipo": "Host",
+        "fabricante": "Ubiquiti Inc",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-15 08:33:19"
+    },
+    "C4236051FEEB": {
+        "ip": "172.21.6.93",
+        "tipo": "Host",
+        "fabricante": "Intel Corporate",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-15 08:33:19"
+    },
+    "B216FCDB225C": {
+        "ip": "172.21.6.28",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-15 08:33:19"
+    },
+    "1EC5EE4C5E5C": {
+        "ip": "172.21.6.74",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Dispositivo Ativo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "5CCD5B901564": {
+        "ip": "172.21.6.35",
+        "tipo": "Host",
+        "fabricante": "Intel Corporate",
+        "status": "Dispositivo Ativo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "56E88AA77454": {
+        "ip": "172.21.6.20",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-15 08:33:19"
+    },
+    "9C05D61917A8": {
+        "ip": "172.21.6.140",
+        "tipo": "Host",
+        "fabricante": "Ubiquiti Inc",
+        "status": "Dispositivo Ativo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "B6A5C26E20CC": {
+        "ip": "172.21.6.59",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-15 08:33:19"
+    },
+    "9CC7D37380A5": {
+        "ip": "172.21.6.29",
+        "tipo": "Host",
+        "fabricante": "Azurewave Technology Inc",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-15 08:33:19"
+    },
+    "BA5F1BA39755": {
+        "ip": "172.21.6.32",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Dispositivo Ativo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "165C9DB6C7BF": {
+        "ip": "172.21.6.246",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Inativo",
+        "ultima_vez_visto": "2026-09-15 08:33:19"
+    },
+    "A2F259B6E426": {
+        "ip": "172.21.6.109",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Dispositivo Novo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "FE6021DC106D": {
+        "ip": "172.21.6.170",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Dispositivo Novo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "F6344EC38BCF": {
+        "ip": "172.21.6.231",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Dispositivo Novo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "04ECD8BD5C68": {
+        "ip": "172.21.6.146",
+        "tipo": "Host",
+        "fabricante": "Intel Corporate",
+        "status": "Dispositivo Novo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "E62767B68B9A": {
+        "ip": "172.21.6.10",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Dispositivo Novo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "243F75F23792": {
+        "ip": "172.21.62.126",
+        "tipo": "Host",
+        "fabricante": "Hui Zhou Gaoshengda Technology Ltd",
+        "status": "Dispositivo Novo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
+    },
+    "FE8797FF6401": {
+        "ip": "172.21.6.67",
+        "tipo": "Host",
+        "fabricante": "Fabricante Desconhecido || Mac Privado",
+        "status": "Dispositivo Novo",
+        "ultima_vez_visto": "2026-09-15 10:14:18"
     }
 }

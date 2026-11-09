@@ -2,8 +2,13 @@ import subprocess
 import json
 import time
 from datetime import datetime
+from pathlib import Path
 
-interface =  input("Digite a interface de rede: -e é ethernet e -w é wireless: ")
+DIRETORIO_DO_SCRIPT = Path(__file__).parent
+caminho_oui = DIRETORIO_DO_SCRIPT / "oui_db.json"
+caminho_hist = DIRETORIO_DO_SCRIPT / "historico.json"
+
+interface =  input("Digite a interface de rede: e é ethernet e w é wireless: ")
 if(interface == "w"):
      interface = "wlp0s20f3"
 if(interface == "e"):
@@ -30,11 +35,11 @@ def ping_sweep(ip_local):
                                                                                     # > /dev/null 2>&1 é silenciar a saída de comando
     subprocess.run(comando, shell=True)
 
-with open("AuditorRede/oui_db.json","r", encoding="utf-8") as f:
+with open(caminho_oui,"r", encoding="utf-8") as f:
      base_oui = json.load(f)
 
 try:
-    with open("AuditorRede/historico.json", "r", encoding="utf-8") as arquivo:
+    with open(caminho_hist, "r", encoding="utf-8") as arquivo:
         dados = json.load(arquivo)
 except FileNotFoundError:
      dados = {}
@@ -68,10 +73,9 @@ for i in resultado_arp.stdout.splitlines():
                "ultima_vez_visto": data_hora
           }
           
-          prefixo_mac = mac[:6]
-          fabricante = base_oui.get(prefixo_mac,"Fabricante Desconhecido || Mac Privado")
+
           print(f"ip: {ip} | tipo: {tipo} | mac: {mac} | fabricante: {fabricante} | status: Ativo | ultima_vez_visto: {data_hora} \n")
 
 
-with open("AuditorRede/historico.json", "w", encoding = "utf-8") as arquivo:
+with open(caminho_hist, "w", encoding = "utf-8") as arquivo:
      json.dump(dados, arquivo, indent=4, ensure_ascii=False)
