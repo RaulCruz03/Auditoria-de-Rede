@@ -72,24 +72,24 @@ def atualizar_estado(dir_dados, **campos):
 # 1b. Interpretar a tabela ARP
 # ---------------------------------------------------------------------------
 def parse_arp(texto, gateways=frozenset()):
-    """Converte a saída do `arp -a` em uma lista de dicionários.
+    _RE_ARP = re.compile(r'(?P<nome>\S+)\s+\((?P<ip>\d+\.\d+\.\d+\.\d+)\)\s+at\s+(?P<mac>(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2})')
+    achados = []                                   # lista que vamos devolver
+    for linha in texto.splitlines():               # uma linha de cada vez
+        m = _RE_ARP.match(linha.strip())           # formatação do modelo
+        if m is None:
+            continue                               # linha sem MAC: pula para a próxima
 
-    Linha de exemplo:
-        _gateway (192.168.4.1) at 14:51:20:62:c5:c2 [ether] on wlp0s20f3
-    vira:
-        {"mac": "14512062C5C2", "ip": "192.168.4.1", "tipo": "Roteador"}
+        nome = m.group("nome")
+        ip = m.group("ip")                        # (1)
+        mac = m.group("mac").replace(":", "").upper()                     # (2)
 
-    Regras:
-      * mac: sem ":" e em maiúsculas;
-      * tipo: "Roteador" se o nome for "_gateway" OU se o IP estiver em `gateways`;
-        senão "Host";
-      * linhas sem MAC (ex.: "at <incomplete>") e linhas em branco são ignoradas;
-      * a ordem da lista é a ordem das linhas.
+        if nome == "_gateway" or ip in gateways:                         # (3)
+            tipo = "Roteador"
+        else:
+            tipo = "Host"
 
-    Dica: uma expressão regular (módulo re) é mais robusta que split() aqui.
-    Teste suas expressões em https://regex101.com (sabor Python).
-    """
-    raise NotImplementedError  # TODO
+        achados.append({"mac": mac, "ip": ip, "tipo": tipo})
+    return achados
 
 
 # ---------------------------------------------------------------------------
