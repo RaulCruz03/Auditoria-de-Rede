@@ -1,0 +1,4 @@
+run/
+dados/
+__pycache__/
+*.pyc

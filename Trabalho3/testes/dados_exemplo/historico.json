@@ -1,0 +1,6 @@
+{
+    "145120AAAA01": {"ip": "192.168.4.1",  "tipo": "Roteador", "fabricante": "Huawei Device Ltd",  "status": "Inativo", "ultima_vez_visto": "2026-11-01 10:00:00"},
+    "9CC7D3000002": {"ip": "192.168.4.5",  "tipo": "Host",     "fabricante": "Azurewave Technology Inc", "status": "Inativo", "ultima_vez_visto": "2026-11-01 10:00:00"},
+    "E85A8B000003": {"ip": "192.168.4.3",  "tipo": "Host",     "fabricante": "Xiaomi Communications Ltd", "status": "Inativo", "ultima_vez_visto": "2026-10-30 18:30:00"},
+    "54BAD9000004": {"ip": "192.168.4.20", "tipo": "Host",     "fabricante": "Intelbras", "status": "Inativo", "ultima_vez_visto": "2026-10-30 18:30:00"}
+}

@@ -1,0 +1,140 @@
+AUTODESCOBERTA-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS 
+    OBJECT-TYPE
+        FROM RFC-1212
+    experimental, IpAddress, Counter, Gauge, TimeTicks
+        FROM RFC1155-SMI;
+
+--Nó Raiz
+autodescobertaMIB OBJECT IDENTIFIER ::={ experimental 99 }
+
+-- Sub-ramos
+objetosGlobais      OBJECT IDENTIFIER ::= { autodescobertaMIB 1 }
+tabelaDispositivos  OBJECT IDENTIFIER ::= { autodescobertaMIB 2 }
+
+-- ============================================================================
+-- 1. Objetos Escalares (Globais e Configurações)
+-- ============================================================================
+
+interfaceRede  OBJECT-TYPE
+    SYNTAX      OCTET STRING 
+    ACCESS      read-only
+    STATUS     mandatory
+    DESCRIPTION "Nome da interface de rede selecionada (ex: eth0, wlp0s20f3)."
+    ::= { objetosGlobais 1 }
+
+tempoEsperaPing OBJECT-TYPE
+    SYNTAX      INTEGER (1..60)
+    ACCESS      read-write
+    STATUS      mandatory
+    DESCRIPTION "Tempo maximo de espera do ping em segundos (parametro -W do script)."
+    ::= { objetosGlobais 2 }
+
+totalDispositivosAtivos OBJECT-TYPE
+    SYNTAX      Gauge
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Quantidade atual de dispositivos ativos detectados na sub-rede."
+    ::= { objetosGlobais 3 }
+
+totalVarredurasRealizadas OBJECT-TYPE
+    SYNTAX      Counter
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Quantidade total de varreduras realizadas na sub-rede."
+    ::= { objetosGlobais 4 }
+
+tempoDesdeUltimaVarredura OBJECT-TYPE
+    SYNTAX      TimeTicks
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Quantidade de tempo desde a ultima varredura na sub-rede."
+    ::= { objetosGlobais 5 }
+
+executarVarredura OBJECT-TYPE
+    SYNTAX      INTEGER { iniciar(1) }
+    ACCESS      write-only
+    STATUS      mandatory
+    DESCRIPTION "Objeto write-only utilizado para forcar o disparo do ping sweep."
+    ::= { objetosGlobais 6 }
+
+-- ============================================================================
+-- 2. Tabela de Dispositivos (dispositivosTable)
+-- ============================================================================
+
+dispositivosTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF DispositivosEntry
+    ACCESS      not-accessible
+    STATUS      mandatory
+    DESCRIPTION "Tabela dinamica contendo o historico de dispositivos encontrados na rede."
+    ::= { tabelaDispositivos 1}
+
+dispositivoEntry OBJECT-TYPE
+    SYNTAX      DispositivosEntry
+    ACCESS      not-accessible
+    STATUS      mandatory
+    DESCRIPTION "Entrada da tabela contendo os atributos de um dispositivo detectado."
+    INDEX       { dispositivoIndex }
+    ::= { dispositivosTable 1 }
+
+DispositivosEntry ::= SEQUENCE {
+    dispositivoIndex            INTEGER,
+    dispositivoMAC              OCTET STRING,
+    dispositivoIP               IpAddress,
+    dispositivoTipo             OCTET STRING,
+    dispositivoFabricante       OCTET STRING,
+    dispositivoStatus           OCTET STRING,
+    dispositivoUltimaVezVisto   OCTET STRING
+}
+
+dispositivoIndex OBJECT-TYPE
+    SYNTAX      INTEGER (1..65535)
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Indice unico sequencial da linha da tabela."
+    ::= { dispositivoEntry 1 }
+
+dispositivoMAC OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Endereco MAC em formato hexadecimal sem dois-pontos."
+    ::= { dispositivoEntry 2 }
+
+dispositivoIP OBJECT-TYPE
+    SYNTAX      IpAddress
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Endereco IP associado ao dispositivo."
+    ::= { dispositivoEntry 3 }
+
+dispositivoTipo OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Tipo de papel exercido (Host ou Roteador)."
+    ::= { dispositivoEntry 4 }
+
+dispositivoFabricante OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Nome do fabricante associado ao dispositivo."
+    ::= { dispositivoEntry 5 }
+
+dispositivoStatus OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Estado do dispositivo (Dispositivo Ativo, Dispositivo Novo ou Inativo)."
+    ::= { dispositivoEntry 6 }
+
+dispositivoUltimaVezVisto OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    ACCESS      read-only
+    STATUS      mandatory
+    DESCRIPTION "Data e hora do ultimo registro no formato YYYY-MM-DD HH:MM:SS."
+    ::= { dispositivoEntry 7 }
+
+END

@@ -1,0 +1,2 @@
+_gateway (192.168.4.1) at 14:51:20:aa:aa:01 [ether] on wlp0s20f3
+? (192.168.4.30) at e0:d4:64:00:00:05 [ether] on wlp0s20f3
