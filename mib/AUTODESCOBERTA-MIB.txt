@@ -64,21 +64,21 @@ executarVarredura OBJECT-TYPE
 -- ============================================================================
 
 dispositivosTable OBJECT-TYPE
-    SYNTAX      SEQUENCE OF DispositivosEntry
+    SYNTAX      SEQUENCE OF DispositivoEntry
     ACCESS      not-accessible
     STATUS      mandatory
     DESCRIPTION "Tabela dinamica contendo o historico de dispositivos encontrados na rede."
     ::= { tabelaDispositivos 1}
 
 dispositivoEntry OBJECT-TYPE
-    SYNTAX      DispositivosEntry
+    SYNTAX      DispositivoEntry
     ACCESS      not-accessible
     STATUS      mandatory
     DESCRIPTION "Entrada da tabela contendo os atributos de um dispositivo detectado."
     INDEX       { dispositivoIndex }
     ::= { dispositivosTable 1 }
 
-DispositivosEntry ::= SEQUENCE {
+DispositivoEntry ::= SEQUENCE {
     dispositivoIndex            INTEGER,
     dispositivoMAC              OCTET STRING,
     dispositivoIP               IpAddress,
@@ -90,7 +90,7 @@ DispositivosEntry ::= SEQUENCE {
 
 dispositivoIndex OBJECT-TYPE
     SYNTAX      INTEGER (1..65535)
-    ACCESS      read-only
+    ACCESS      not-accessible
     STATUS      mandatory
     DESCRIPTION "Indice unico sequencial da linha da tabela."
     ::= { dispositivoEntry 1 }

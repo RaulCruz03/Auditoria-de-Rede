@@ -114,7 +114,7 @@ try:
     caso("GET de objeto inexistente", "snmpget", ALVO, ".1.3.6.1.3.99.1.9.0", esperado=["No Such"])
     caso("GET de linha inexistente (índice 99)", "snmpget", ALVO, "dispositivoMAC.99", esperado=["No Such Instance"])
     caso("GET de escalar sem .0", "snmpget", ALVO, "interfaceRede", esperado=["No Such Instance"])
-    caso("GET de executarVarredura (write-only: valor fixo por limitação do pass_persist)", "snmpget", ALVO, "executarVarredura.0", esperado=["iniciar(1)"])
+    caso("GET de executarVarredura (write-only)", "snmpget", ALVO, "executarVarredura.0", esperado=["iniciar(1)"])
     caso("SET com comunidade somente-leitura", "snmpset", ALVO, "tempoEsperaPing.0", "i", "5", esperado=["Error"], comunidade="teste")
 
     registrar("\n## 6. SET")

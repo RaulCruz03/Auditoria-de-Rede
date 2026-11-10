@@ -1,4 +1,4 @@
-# Modelo de configuração do snmpd para o agente da AUTODESCOBERTA-MIB.
+# Configuração do snmpd para o agente da AUTODESCOBERTA-MIB.
 # Os marcadores @...@ são preenchidos por scripts/iniciar_snmpd.sh.
 
 # Onde o snmpd escuta (porta 1161: não exige root e não conflita com um snmpd na 161)
@@ -8,7 +8,7 @@ agentAddress udp:@ESCUTA@:@PORTA@
 rocommunity teste     @FONTE@
 rwcommunity teste-rw  @FONTE@
 
-# Delega todo o ramo da MIB do Trabalho 2 ao nosso script, que fala com o snmpd por stdin/stdout.
-# (O snmpd divide a linha em espaços simples: sem espaços duplos e sem espaços em caminhos.)
-# pass_persist mantém o script vivo entre as consultas (pass, sem persist, o reiniciaria a cada uma).
-pass_persist .1.3.6.1.3.99 @COMANDO_AGENTE@
+# ETAPA 7 - TODO: escreva aqui a linha que delega o ramo da sua MIB ao agente.
+# Formato:  pass_persist <OID da raiz da MIB> <comando que inicia o agente>
+# Use @COMANDO_AGENTE@ no lugar do comando: o script troca pelo caminho completo do
+# python3 + agente_snmp.py + argumentos. (O snmpd separa a linha por espaços simples.)
