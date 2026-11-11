@@ -1,18 +1,3 @@
-"""ETAPA 1 - Autodescoberta como biblioteca.
-
-O seu codigo.py (Trabalho 1) faz tudo em sequência e pede dados com input(). O agente
-SNMP precisa chamar essa lógica sozinho (quando receber um SET ou de tempos em tempos)
-e ler os resultados. Por isso, aqui ela vira funções pequenas, cada uma testável.
-
-Arquivos que ficam na pasta de dados (DIR_DADOS):
-
-  historico.json  {MAC: {"indice", "ip", "tipo", "fabricante", "status", "ultima_vez_visto"}}
-  estado.json     {"interface", "tempo_espera_ping", "total_varreduras", "ultima_varredura_epoch"}
-
-Implemente as funções marcadas com TODO, na ordem em que aparecem.
-Verifique com:  python3 verificar.py 1
-"""
-
 import json
 import os
 import re
@@ -68,16 +53,13 @@ def atualizar_estado(dir_dados, **campos):
     return estado
 
 
-# ---------------------------------------------------------------------------
-# 1b. Interpretar a tabela ARP
-# ---------------------------------------------------------------------------
 def parse_arp(texto, gateways=frozenset()):
     _RE_ARP = re.compile(r'(?P<nome>\S+)\s+\((?P<ip>\d+\.\d+\.\d+\.\d+)\)\s+at\s+(?P<mac>(?:[0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2})')
     achados = []                                   # lista que vamos devolver
     for linha in texto.splitlines():               # uma linha de cada vez
         m = _RE_ARP.match(linha.strip())           # formatação do modelo
         if m is None:
-            continue                               # linha sem MAC: pula para a próxima
+            continue                             
 
         nome = m.group("nome")
         ip = m.group("ip")                        # (1)
@@ -92,39 +74,50 @@ def parse_arp(texto, gateways=frozenset()):
     return achados
 
 
-# ---------------------------------------------------------------------------
-# 1c. Atualizar o histórico (o coração da autodescoberta)
-# ---------------------------------------------------------------------------
 def garantir_indices(historico):
-    """Dá um "indice" inteiro a todo registro que ainda não tem um. Altera e devolve `historico`.
+    maior = 0                                  
+    for registro in historico.values():        # .values() dá o dicionário de cada dispositivo
+        if isinstance(registro.get("indice"), int) and registro["indice"] > maior:
+            maior = registro["indice"]
 
-    O índice será o número da linha na tabela SNMP, por isso precisa ser ÚNICO e
-    ESTÁVEL (nunca muda para um mesmo MAC). Registros que já têm índice ficam como estão;
-    os que não têm recebem max(índices existentes) + 1, + 2, ... na ordem do dicionário.
-    O seu historico.json do Trabalho 1 não tem esse campo: é para ele que isto existe.
-    """
-    raise NotImplementedError  # TODO
+    # 2º for: dar número a quem não tem
+    for registro in historico.values():
+        if not isinstance(registro.get("indice"), int):                             # registro sem "indice"
+            maior = maior + 1                     # avance o contador
+            registro["indice"] = maior        # e dê o número ao registro
 
+    return historico
 
 def atualizar_historico(historico, achados, base_oui, data_hora):
-    """Aplica o resultado de uma varredura ao histórico e devolve um histórico NOVO.
+    novo = {}
+    for mac, reg in historico.items():
+        novo[mac] = dict(reg)
+    garantir_indices(novo)                                      # índices para os antigos sem número
+    conhecidos = set(novo)                                      # MACs que existiam ANTES desta varredura
 
-    historico: dict {MAC: registro} atual (NÃO pode ser modificado: faça uma cópia)
-    achados:   lista devolvida por parse_arp
-    base_oui:  dict {prefixo_de_6_hex: fabricante}
-    data_hora: texto "YYYY-MM-DD HH:MM:SS" desta varredura
+    for registro in novo.values():                              # (1) todo mundo começa Inativo
+        registro["status"] = STATUS_INATIVO
 
-    Regras (as mesmas do seu codigo.py, mais o índice):
-      * todo registro que já existia vira "Inativo";
-      * cada MAC achado recebe ip, tipo, fabricante, ultima_vez_visto = data_hora e
-        status "Dispositivo Ativo" se já existia, ou "Dispositivo Novo" se não;
-      * fabricante = base_oui[6 primeiros caracteres do MAC] ou FABRICANTE_DESCONHECIDO;
-      * todo registro termina com "indice" (use garantir_indices); um MAC que já
-        existia mantém o índice antigo, e os novos recebem os próximos números.
+    for achado in achados:
+        mac = achado["mac"]
+        if mac in conhecidos:
+            indice = novo[mac]["indice"]                                     # (2) manter o índice antigo
+            status = STATUS_ATIVO                                     # (3)
+        else:
+            indice = None                                       # será numerado depois
+            status = STATUS_NOVO                                     # (4)
 
-    Dica: copy.deepcopy, ou {mac: dict(reg) for mac, reg in historico.items()}.
-    """
-    raise NotImplementedError  # TODO
+        novo[mac] = {
+            "indice": indice,
+            "ip": achado["ip"],                                       # (5)
+            "tipo": achado["tipo"],                                     # (6)
+            "fabricante": base_oui.get(mac[:6], FABRICANTE_DESCONHECIDO),   # (7)
+            "status": status,
+            "ultima_vez_visto": data_hora,                         # (8)
+        }
+
+    garantir_indices(novo)                                      # numera os novos: max + 1, + 2...
+    return novo
 
 
 # ---------------------------------------------------------------------------
@@ -146,9 +139,6 @@ def varredura(dir_dados, caminho_oui):
     raise NotImplementedError  # TODO
 
 
-# ===========================================================================
-# Funções prontas (infraestrutura): leia e entenda, mas não precisa alterar.
-# ===========================================================================
 ENV_ARP_FILE = "AUTODESCOBERTA_ARP_FILE"
 
 
