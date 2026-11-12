@@ -41,30 +41,27 @@ def log(msg):
 # ===========================================================================
 # ETAPA 3 - OIDs
 # ===========================================================================
-# Um OID é representado aqui como TUPLA DE INTEIROS: (1, 3, 6, 1, 3, 99).
 RAIZ_MIB = (1, 3, 6, 1, 3, 99)  # experimental(3) . autodescobertaMIB(99)
 
-# TODO: troque cada None pela tupla certa (consulte a árvore da sua MIB).
-# Escalares: o OID da INSTÂNCIA, ou seja, já com o ".0" no final.
-OID_INTERFACE = None  # interfaceRede.0
-OID_TEMPO_PING = None  # tempoEsperaPing.0
-OID_TOTAL_ATIVOS = None  # totalDispositivosAtivos.0
-OID_TOTAL_VARREDURAS = None  # totalVarredurasRealizadas.0
-OID_TEMPO_DESDE_ULTIMA = None  # tempoDesdeUltimaVarredura.0
-OID_EXECUTAR = None  # executarVarredura.0
+OID_INTERFACE = (RAIZ_MIB + (1,1,0))  # interfaceRede.0
+OID_TEMPO_PING = (RAIZ_MIB + (1,2,0))  # tempoEsperaPing.0
+OID_TOTAL_ATIVOS = (RAIZ_MIB + (1,3,0))  # totalDispositivosAtivos.0
+OID_TOTAL_VARREDURAS = (RAIZ_MIB + (1,4,0))  # totalVarredurasRealizadas.0
+OID_TEMPO_DESDE_ULTIMA = (RAIZ_MIB + (1,5,0))  # tempoDesdeUltimaVarredura.0
+OID_EXECUTAR = (RAIZ_MIB + (1,6,0))  # executarVarredura.0
 # Tabela: o OID de dispositivoEntry. Uma célula é ENTRADA + (coluna, indice).
-ENTRADA = None
+ENTRADA = (RAIZ_MIB + (2,1,1))  # dispositivoEntry.1.1
 
 
 def parse_oid(texto):
-    """'.1.3.6.1' (ou '1.3.6.1', com espaços/quebra de linha nas pontas) -> (1, 3, 6, 1)."""
-    raise NotImplementedError  # TODO
+    texto = texto.strip().strip(".")    # formata string tirando espaços vazios e pontos
+    texto = texto.split(".")            # separa a cada ponto
+    return tuple(int(x) for x in texto) # transforma em tupla de inteiros 
 
 
 def formatar_oid(oid):
-    """(1, 3, 6, 1) -> '.1.3.6.1'  (o snmpd espera o ponto inicial)."""
-    raise NotImplementedError  # TODO
-
+    return "." + ".".join(str(x) for x in oid)  # transforma a tupla em string, separando por pontos
+    
 
 # ===========================================================================
 # ETAPA 4 - Instâncias: o que existe agora e com qual valor
@@ -154,20 +151,27 @@ def tratar_set(texto_oid, texto_valor):
 # ETAPA 2 - Laço de comunicação com o snmpd
 # ===========================================================================
 def servir(entrada, saida):
-    """Lê comandos de `entrada` e escreve respostas em `saida` até o fim da entrada.
+    while True:
+        linha = entrada.readline()
+        if linha == "":                  # (1)
+            return
+        comando = linha.strip()          # (2)
 
-      * "PING"    -> responda "PONG"
-      * "get"     -> leia mais 1 linha (o OID) e responda tratar_get(oid)
-      * "getnext" -> leia mais 1 linha e responda tratar_getnext(oid)
-      * "set"     -> leia mais 2 linhas (OID e valor) e responda tratar_set(oid, valor)
-      * linha vazia ou comando desconhecido: ignore
-      * fim da entrada (readline() devolve ""): retorne
+        if comando == "PING":
+            resposta = ______             # (3)
+        elif comando == "get":
+            oid = entrada.readline().strip()
+            resposta = tratar_get(oid)
+        elif comando == "getnext":
+            ______                        # (4)
+        elif comando == "set":
+            ______                        # (5)
+        else:
+            continue                      # (6)
 
-    Cada resposta é uma lista de linhas: escreva cada uma seguida de "\\n" e chame
-    saida.flush() depois de cada resposta. Tire o "\\n" do fim das linhas lidas.
-    Chame log(...) com o que recebeu e respondeu: vai ajudar a depurar.
-    """
-    raise NotImplementedError  # TODO
+        for l in resposta:               # (7)
+            saida.write(l + "\n")
+        saida.flush()
 
 
 # ===========================================================================

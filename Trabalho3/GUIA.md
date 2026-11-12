@@ -99,10 +99,12 @@ cat dados/historico.json dados/estado.json
 
 **Checkpoint.**
 - Por que `atualizar_historico` não pode alterar o dicionário que recebe? Que bug isso evitaria no agente?
+não faço ideia
 - Por que o índice precisa ser estável? O que aconteceria com um gerente SNMP que guardou
   "`dispositivoIP.5` é a impressora" se o índice mudasse a cada varredura?
+  perderíamos informações de contexto daquela mesma rede
 - Sua regex do `parse_arp`: explique cada pedaço.
-
+não consigo.
 <details><summary>Dica 1 (parse_arp)</summary>
 
 Uma regex com três grupos: o nome (tudo até o primeiro espaço), o IP entre parênteses e o MAC
@@ -299,5 +301,4 @@ vale a pena explicar no README.
    - as limitações e decisões (o mistério da etapa 7 entra aqui);
    - como rodar os testes e onde estão as evidências.
 
-**Checkpoint final.** Mande o README. Depois, se quiser, peça a comparação com a versão que o Claude
-escreveu antes, e discuta as diferenças.
+
