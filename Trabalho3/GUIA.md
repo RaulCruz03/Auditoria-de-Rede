@@ -139,6 +139,7 @@ PING
 
 **Checkpoint.**
 - Por que `flush()` depois de cada resposta? O que aconteceria sem ele?
+para mandar todas as respostas escritas que estão no buffer
 - O que o `--log -` mostrou? Para que vai servir na etapa 7?
 
 <details><summary>Dica 1</summary>

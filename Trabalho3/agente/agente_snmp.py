@@ -153,23 +153,28 @@ def tratar_set(texto_oid, texto_valor):
 def servir(entrada, saida):
     while True:
         linha = entrada.readline()
-        if linha == "":                  # (1)
+        if linha == "":                  # fim da entrada
             return
-        comando = linha.strip()          # (2)
+        comando = linha.strip()          # remove espaços e quebras de linha
 
         if comando == "PING":
-            resposta = ______             # (3)
+            resposta = ["PONG"]             # Responde PONG para o snmpd, que sabe que o agente está vivo
         elif comando == "get":
             oid = entrada.readline().strip()
+            log(f"<- get {oid}")
             resposta = tratar_get(oid)
         elif comando == "getnext":
-            ______                        # (4)
+            oid = entrada.readline().strip()
+            resposta = tratar_getnext(oid)
         elif comando == "set":
-            ______                        # (5)
+            oid = entrada.readline().strip()
+            valor = entrada.readline().strip()
+            resposta = [tratar_set(oid, valor)]
         else:
-            continue                      # (6)
-
-        for l in resposta:               # (7)
+            continue # se não for nenhum dos comandos acima, ignora e espera o próximo
+                            
+        log(f"-> {resposta}")
+        for l in resposta:               # buffer de saída: escreve cada linha da resposta no stdout, seguido de uma quebra de linha
             saida.write(l + "\n")
         saida.flush()
 
