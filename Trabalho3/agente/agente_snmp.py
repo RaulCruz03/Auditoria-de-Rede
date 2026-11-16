@@ -95,7 +95,7 @@ def instancias():
         segundos = time.time() - datetime.strptime(mais_recente, ad.FORMATO_DATA).timestamp()
     else:
         segundos = 0
-    ticks = int(segundos * 100) % 2**32                                                   # devolve o tempo em timeticks (1/100 de segundo) desde a última varredura, convertendo os segundos em timeticks e limitando o valor a 32 bits
+    ticks = int(segundos * 100) % 2**32                     # devolve o tempo em timeticks (1/100 de segundo) desde a última varredura, convertendo os segundos em timeticks e limitando o valor a 32 bits
     lista.append((OID_TEMPO_DESDE_ULTIMA, "timeticks", str(ticks)))
 
     # ---------- tabela ----------
@@ -108,7 +108,7 @@ def instancias():
         lista.append((ENTRADA + (6, i), "string", reg["status"]))
         lista.append((ENTRADA + (7, i), "string", reg["ultima_vez_visto"]))
 
-    return sorted(lista, key=lambda item: item[0])                                                    # retorna a lista de instâncias ordenada pelo OID, para que o agente possa responder corretamente às consultas GET e GETNEXT do snmpd
+    return sorted(lista, key=lambda item: item[0])           # retorna a lista de instâncias ordenada pelo OID, para que o agente possa responder corretamente às consultas GET e GETNEXT do snmpd
 
 
 # ===========================================================================
@@ -119,45 +119,72 @@ def tratar_get(texto_oid):
 
     Devolve [oid_formatado, tipo, valor] ou ["NONE"] se não existir.
     """
-    raise NotImplementedError  # TODO
+    pedido = parse_oid(texto_oid)                           # formata o oid para uma tupla de inteiros, para que possa ser comparado com os OIDs das instâncias
+    for oid, tipo, valor in instancias():
+        if pedido == oid:                                   # se o oid do pedido for igual ao oid da instância
+            return [formatar_oid(oid), tipo, valor]         # devolve a instância formatada
+    return ["NONE"]
 
 
 def tratar_getnext(texto_oid):
-    """GETNEXT: a PRIMEIRA instância com OID ESTRITAMENTE MAIOR que o pedido.
-
-    Devolve [oid_formatado, tipo, valor] ou ["NONE"] se não houver próxima.
-    O OID pedido pode não existir (ex.: só a raiz .1.3.6.1.3.99): tudo bem.
-    """
-    raise NotImplementedError  # TODO
-
+    pedido = parse_oid(texto_oid)                              # formata o oid para uma tupla de inteiros, para que possa ser comparado com os OIDs das instâncias
+    for oid, tipo, valor in instancias():
+        if pedido < oid:                               # se o oid do pedido for menor que o oid da instância, significa que a instância é a próxima na ordem
+            return [formatar_oid(oid), tipo, valor]
+    return ["NONE"]
 
 # ===========================================================================
 # ETAPA 6 - SET e varredura em segundo plano
 # ===========================================================================
-def disparar_varredura():
-    """Inicia ad.varredura(DIR_DADOS, CAMINHO_OUI) numa THREAD e devolve True na hora.
+_trava_varredura = threading.Lock()
 
-    Se já houver uma varredura em andamento, não inicia outra e devolve False.
-    Dica: threading.Lock() criado uma vez, fora da função, + acquire(blocking=False).
-    Lembre de liberar a trava quando a varredura terminar, MESMO se ela der erro (try/finally).
-    """
-    raise NotImplementedError  # TODO
+
+def disparar_varredura():
+    if not _trava_varredura.acquire(blocking=False):   #  tenta pegar a trava sem esperar
+        return False
+
+    def tarefa():
+        try:
+            ad.varredura(DIR_DADOS , CAMINHO_OUI)             # realiza a varredura, atualizando o histórico e o estado do agente
+        except Exception as erro:
+            log(f"varredura falhou: {erro}")
+        finally:
+            _trava_varredura.release()                               # solta a trava, permitindo que outra varredura seja iniciada
+
+    threading.Thread(target=tarefa, daemon=True).start()   # inicia a varredura em segundo plano, para que o agente possa continuar respondendo às consultas do snmpd enquanto a varredura é realizada
+    return True
 
 
 def tratar_set(texto_oid, texto_valor):
-    """SET. `texto_valor` vem como "<tipo> <valor>", ex.: "integer 5" ou "string eth0".
+    oid = parse_oid(texto_oid)                         # formata o oid para uma tupla de inteiros, para que possa ser comparado com os OIDs das instâncias
+    tipo, valor = texto_valor.split(maxsplit=1)      # "integer 5" -> "integer", "5"
 
-    Devolve a string de resposta:
-      tempoEsperaPing.0   tipo != integer -> "wrong-type"
-                          fora de 1..60   -> "wrong-value"
-                          ok              -> grava com ad.atualizar_estado e devolve "DONE"
-      executarVarredura.0 tipo != integer -> "wrong-type"
-                          valor != 1      -> "wrong-value"
-                          varredura em andamento -> "inconsistent-value"
-                          ok              -> disparar_varredura() e "DONE"
-      qualquer outro OID  -> "not-writable"
-    """
-    raise NotImplementedError  # TODO
+    if oid == OID_TEMPO_PING:
+        if tipo != "integer":
+            return "wrong-type"   
+        try:                        
+            numero = int(valor)
+        except ValueError:
+            return "wrong-value"
+        if not (1 <= numero <= 60):                                   # fora de 1..60?
+            return "wrong-value"
+        ad.atualizar_estado(DIR_DADOS, tempo_espera_ping=numero)          # atualiza o estado do agente com o novo tempo de espera do ping
+        return "DONE"
+
+    elif oid == OID_EXECUTAR:                              # o pedido é para executarVarredura.0
+        if tipo != "integer":
+            return "wrong-type"
+        try:
+            numero = int(valor)
+        except ValueError:
+            return "wrong-value"
+        if numero != 1:                                   # o valor é diferente de 1 (iniciar)? só 1 é aceito
+            return "wrong-value"
+        if not disparar_varredura():                               # tenta iniciar a varredura em segundo plano
+            return "inconsistent-value"
+        return "DONE"
+
+    return "not-writable"                                    # varredura disparada; o resultado aparece nas próximas consultas
 
 
 # ===========================================================================
