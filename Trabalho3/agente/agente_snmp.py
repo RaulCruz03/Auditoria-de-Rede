@@ -37,7 +37,7 @@ CAMINHO_OUI = None
 def log(msg):
     """Substituída por main() quando o agente roda com --log."""
 
-
+OID_RAIZ = ".1.3.6.1.3.99"
 # ===========================================================================
 # ETAPA 3 - OIDs
 # ===========================================================================
@@ -115,14 +115,16 @@ def instancias():
 # ETAPA 5 - GET e GETNEXT
 # ===========================================================================
 def tratar_get(texto_oid):
-    """GET: a instância com OID EXATAMENTE igual.
+    pedido = parse_oid(texto_oid)
 
-    Devolve [oid_formatado, tipo, valor] ou ["NONE"] se não existir.
-    """
-    pedido = parse_oid(texto_oid)                           # formata o oid para uma tupla de inteiros, para que possa ser comparado com os OIDs das instâncias
+    # executarVarredura é write-only, mas o pass_persist faz um GET antes de
+    # repassar o SET; sem resposta aqui, o SET nunca chega ao agente.
+    if pedido == OID_EXECUTAR:
+        return [formatar_oid(OID_EXECUTAR), "integer", "1"]
+
     for oid, tipo, valor in instancias():
-        if pedido == oid:                                   # se o oid do pedido for igual ao oid da instância
-            return [formatar_oid(oid), tipo, valor]         # devolve a instância formatada
+        if oid == pedido:
+            return [formatar_oid(oid), tipo, valor]
     return ["NONE"]
 
 

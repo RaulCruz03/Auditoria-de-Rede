@@ -8,7 +8,4 @@ agentAddress udp:@ESCUTA@:@PORTA@
 rocommunity teste     @FONTE@
 rwcommunity teste-rw  @FONTE@
 
-# ETAPA 7 - TODO: escreva aqui a linha que delega o ramo da sua MIB ao agente.
-# Formato:  pass_persist <OID da raiz da MIB> <comando que inicia o agente>
-# Use @COMANDO_AGENTE@ no lugar do comando: o script troca pelo caminho completo do
-# python3 + agente_snmp.py + argumentos. (O snmpd separa a linha por espaços simples.)
+pass_persist .1.3.6.1.3.99 @COMANDO_AGENTE@

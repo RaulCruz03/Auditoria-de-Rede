@@ -80,7 +80,7 @@ def etapa7(detalhe):
     itens = []
     for prog in ("snmpd", "snmpget", "snmpwalk"):
         itens.append((f"{prog} instalado", "ok" if shutil.which(prog) else "falta", "sudo apt install snmpd snmp"))
-    conf = (RAIZ / "config" / "snmpd.conf.modelo").read_text(encoding="utf-8")
+    conf = (PASTA / "config" / "snmpd.conf.modelo").read_text(encoding="utf-8")
     linha = [l for l in conf.splitlines() if l.strip().startswith("pass_persist")]
     ok = bool(linha) and ".1.3.6.1.3.99" in linha[0] and "@COMANDO_AGENTE@" in linha[0]
     itens.append(("linha pass_persist no config/snmpd.conf.modelo", "ok" if ok else "falta",
@@ -90,7 +90,7 @@ def etapa7(detalhe):
             itens.append(("teste de integração", "falta", "rode: python3 verificar.py 7 (leva ~15 s)"))
         else:
             r = subprocess.run([sys.executable, "testes/integracao_snmpd.py"], capture_output=True, text=True)
-            falhas = [l for l in (RAIZ / "evidencias" / "saida_testes.txt").read_text(encoding="utf-8").splitlines()
+            falhas = [l for l in (PASTA / "evidencias" / "saida_testes.txt").read_text(encoding="utf-8").splitlines()
                       if l.startswith("### ")] if r.returncode else []
             itens.append(("teste de integração (evidencias/saida_testes.txt)", "ok" if r.returncode == 0 else "falhou",
                           "veja os casos com '=> FALHOU' em evidencias/saida_testes.txt" if falhas else r.stderr[-300:]))

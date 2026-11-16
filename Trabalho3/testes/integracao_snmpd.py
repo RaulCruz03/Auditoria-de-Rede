@@ -22,7 +22,7 @@ RAIZ = Path(__file__).resolve().parent.parent
 EXEMPLO = RAIZ / "testes" / "dados_exemplo"
 PORTA = os.environ.get("PORTA", "1161")
 ALVO = f"127.0.0.1:{PORTA}"
-MIB = ["-M", str(RAIZ / "mibs"), "-m", "AUTODESCOBERTA-MIB"]
+MIB = ["-M", str(RAIZ.parent / "mib"), "-m", "AUTODESCOBERTA-MIB"]
 
 tmp = Path(tempfile.mkdtemp(prefix="autodescoberta-teste-"))
 (tmp / "dados").mkdir()
