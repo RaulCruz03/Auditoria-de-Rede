@@ -67,35 +67,48 @@ def formatar_oid(oid):
 # ETAPA 4 - Instâncias: o que existe agora e com qual valor
 # ===========================================================================
 def instancias():
-    """Devolve a lista de TODAS as instâncias legíveis, ORDENADA por OID.
+    estado = ad.ler_estado(DIR_DADOS)                                   # carrega o arquivo autodescoberta.py e devolve o estado atual do agente
+    historico = ad.garantir_indices(
+        ad.carregar_json(Path(DIR_DADOS) / "historico.json", {}))       # carrega o json do histórico de dispositivos e garante que cada registro tenha um índice único 
 
-    Cada item é uma tupla (oid_em_tupla, tipo_pass_persist, valor_em_texto), ex.:
-        ((1,3,6,1,3,99,1,1,0), "string", "wlp0s20f3")
+    lista = []
 
-    Leia o estado (ad.ler_estado) e o histórico (ad.carregar_json + ad.garantir_indices)
-    de DIR_DADOS a cada chamada: é isso que faz a rede "viva" aparecer no SNMP.
+    # ---------- escalares ----------
+    lista.append((OID_INTERFACE, "string", estado["interface"]))                    # anexa o OID da interface de rede, tipo string e o valor da interface atual 
+    lista.append((OID_TEMPO_PING, "integer", str(estado["tempo_espera_ping"])))     # anexa o OID do tempo de espera do ping, tipo integer e o valor do tempo de espera atual 
 
-    Escalares:
-      interfaceRede             string     estado["interface"]
-      tempoEsperaPing           integer    estado["tempo_espera_ping"]
-      totalDispositivosAtivos   gauge      nº de registros com status != "Inativo"
-      totalVarredurasRealizadas counter    estado["total_varreduras"] % 2**32
-      tempoDesdeUltimaVarredura timeticks  centésimos de segundo desde
-                                           estado["ultima_varredura_epoch"]; se for None,
-                                           desde o maior "ultima_vez_visto" do histórico
-                                           (datetime.strptime(..., ad.FORMATO_DATA).timestamp());
-                                           se não houver nenhum, 0. Sempre % 2**32.
-      executarVarredura         NÃO entra (é write-only)
+    ativos = 0
+    for reg in historico.values():
+        if ad.STATUS_INATIVO != reg["status"]:                                      # checa quantos dispositivos estão ativos no histórico, comparando o status de cada registro com o status inativo definido em autodescoberta.py 
+            ativos += 1
+    lista.append((OID_TOTAL_ATIVOS, "gauge", str(ativos)))                          # anexa o OID do total de dispositivos ativos, tipo gauge e o valor do total de dispositivos ativos encontrados no histórico
 
-    Tabela, para cada registro do histórico (coluna 1, o índice, é not-accessible):
-      coluna 2 string    MAC (a chave do dicionário)
-      coluna 3 ipaddress registro["ip"]
-      coluna 4 string    registro["tipo"]
-      coluna 5 string    registro["fabricante"]
-      coluna 6 string    registro["status"]
-      coluna 7 string    registro["ultima_vez_visto"]
-    """
-    raise NotImplementedError  # TODO
+    lista.append((OID_TOTAL_VARREDURAS, "counter", str(estado["total_varreduras"] % 2**32)))   # anexa o OID do total de varreduras, tipo counter e o valor do total de varreduras encontradas no histórico
+
+    # ---------- tempo desde a última varredura (timeticks) ----------
+    epoch = estado["ultima_varredura_epoch"]
+    datas = [reg["ultima_vez_visto"] for reg in historico.values()]
+    if epoch is not None:
+        segundos = time.time() - epoch                      # calcula o tempo em segundos desde a última varredura, subtraindo o epoch atual do tempo atual 
+    elif datas:
+        mais_recente = max(datas)                           # se não houver epoch, mas houver datas, pega a data mais recente do histórico
+        segundos = time.time() - datetime.strptime(mais_recente, ad.FORMATO_DATA).timestamp()
+    else:
+        segundos = 0
+    ticks = int(segundos * 100) % 2**32                                                   # devolve o tempo em timeticks (1/100 de segundo) desde a última varredura, convertendo os segundos em timeticks e limitando o valor a 32 bits
+    lista.append((OID_TEMPO_DESDE_ULTIMA, "timeticks", str(ticks)))
+
+    # ---------- tabela ----------
+    for mac, reg in historico.items():
+        i = reg["indice"]
+        lista.append((ENTRADA + (2, i), "string", mac))
+        lista.append((ENTRADA + (3, i), "ipaddress", reg["ip"]))            
+        lista.append((ENTRADA + (4, i), "string", reg["tipo"]))
+        lista.append((ENTRADA + (5, i), "string", reg["fabricante"]))
+        lista.append((ENTRADA + (6, i), "string", reg["status"]))
+        lista.append((ENTRADA + (7, i), "string", reg["ultima_vez_visto"]))
+
+    return sorted(lista, key=lambda item: item[0])                                                    # retorna a lista de instâncias ordenada pelo OID, para que o agente possa responder corretamente às consultas GET e GETNEXT do snmpd
 
 
 # ===========================================================================
