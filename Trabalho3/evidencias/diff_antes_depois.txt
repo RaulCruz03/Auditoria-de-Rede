@@ -1,0 +1,18 @@
+4,5c4,5
+< AUTODESCOBERTA-MIB::totalVarredurasRealizadas.0 = Counter32: 2
+< AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 = Timeticks: (527) 0:00:05.27
+---
+> AUTODESCOBERTA-MIB::totalVarredurasRealizadas.0 = Counter32: 3
+> AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 = Timeticks: (524) 0:00:05.24
+25,29c25,29
+< AUTODESCOBERTA-MIB::dispositivoStatus.4 = STRING: "Dispositivo Novo"
+< AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.1 = STRING: "2026-11-16 18:57:59"
+< AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.2 = STRING: "2026-11-16 18:57:59"
+< AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.3 = STRING: "2026-11-16 18:57:59"
+< AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.4 = STRING: "2026-11-16 18:57:59"
+---
+> AUTODESCOBERTA-MIB::dispositivoStatus.4 = STRING: "Dispositivo Ativo"
+> AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.1 = STRING: "2026-11-16 18:59:57"
+> AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.2 = STRING: "2026-11-16 18:59:57"
+> AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.3 = STRING: "2026-11-16 18:59:57"
+> AUTODESCOBERTA-MIB::dispositivoUltimaVezVisto.4 = STRING: "2026-11-16 18:59:57"

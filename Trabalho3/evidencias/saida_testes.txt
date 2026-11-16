@@ -39,7 +39,7 @@ AUTODESCOBERTA-MIB::totalVarredurasRealizadas.0 = Counter32: 0
 
 ### GET tempoDesdeUltimaVarredura (TimeTicks)
 $ snmpget -v2c -c teste 127.0.0.1:1161 tempoDesdeUltimaVarredura.0
-AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 = Timeticks: (130982598) 15 days, 3:50:25.98
+AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 = Timeticks: (132815885) 15 days, 8:55:58.85
 => OK
 
 ## 3. WALK e GETNEXT
@@ -50,7 +50,7 @@ AUTODESCOBERTA-MIB::interfaceRede.0 = STRING: "wlp0s20f3"
 AUTODESCOBERTA-MIB::tempoEsperaPing.0 = INTEGER: 1
 AUTODESCOBERTA-MIB::totalDispositivosAtivos.0 = Gauge32: 0
 AUTODESCOBERTA-MIB::totalVarredurasRealizadas.0 = Counter32: 0
-AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 = Timeticks: (130982599) 15 days, 3:50:25.99
+AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 = Timeticks: (132815886) 15 days, 8:55:58.86
 AUTODESCOBERTA-MIB::dispositivoMAC.1 = STRING: "145120AAAA01"
 AUTODESCOBERTA-MIB::dispositivoMAC.2 = STRING: "9CC7D3000002"
 AUTODESCOBERTA-MIB::dispositivoMAC.3 = STRING: "E85A8B000003"
@@ -276,7 +276,7 @@ AUTODESCOBERTA-MIB::totalDispositivosAtivos.0 = Gauge32: 4
 
 ### tempoDesdeUltimaVarredura é pequeno (< 10 s)
 $ snmpget -v2c -c teste -Oq 127.0.0.1:1161 tempoDesdeUltimaVarredura.0
-AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 0:0:00:00.27
+AUTODESCOBERTA-MIB::tempoDesdeUltimaVarredura.0 0:0:00:00.23
 => OK
 
 ### Tabela agora tem 6 linhas (índices 5 e 6 são os novos)
